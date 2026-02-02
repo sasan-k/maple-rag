@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chat with an AI assistant about Canadian tax information from Canada.ca">
+    <title>Canada.ca Tax Assistant</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🍁</span>
+                    <span class="logo-text">Canada.ca Tax Assistant</span>
+                </div>
+                <div class="header-actions">
+                    <button id="new-chat-btn" class="btn btn-secondary" title="Start new conversation">
+                        <span>New Chat</span>
+                    </button>
+                    <div class="language-toggle">
+                        <button id="lang-en" class="lang-btn active">EN</button>
+                        <button id="lang-fr" class="lang-btn">FR</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Chat Area -->
+        <main class="chat-container">
+            <!-- Welcome Message -->
+            <div id="welcome-section" class="welcome-section">
+                <div class="welcome-content">
+                    <h1>Welcome to the Canada.ca Tax Assistant</h1>
+                    <p>Ask me questions about Canadian taxes, filing returns, credits, deductions, and more.</p>
+                    <div class="example-questions">
+                        <h3>Try asking:</h3>
+                        <div class="example-grid">
+                            <button class="example-btn" data-question="How do I file my tax return?">
+                                📝 How do I file my tax return?
+                            </button>
+                            <button class="example-btn" data-question="What is the tax filing deadline?">
+                                📅 What is the tax filing deadline?
+                            </button>
+                            <button class="example-btn" data-question="What tax credits am I eligible for?">
+                                💰 What tax credits am I eligible for?
+                            </button>
+                            <button class="example-btn" data-question="How does GST/HST work?">
+                                🧾 How does GST/HST work?
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div id="messages-container" class="messages-container hidden">
+                <!-- Messages will be inserted here -->
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" class="loading-indicator hidden">
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span class="loading-text">Thinking...</span>
+            </div>
+        </main>
+
+        <!-- Input Area -->
+        <footer class="input-area">
+            <div class="input-container">
+                <textarea 
+                    id="message-input" 
+                    placeholder="Ask a question about Canadian taxes..."
+                    rows="1"
+                    maxlength="2000"
+                ></textarea>
+                <button id="send-btn" class="send-btn" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="input-footer">
+                <span class="disclaimer">
+                    This assistant provides information from Canada.ca. Always verify with official sources.
+                </span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
