@@ -4,22 +4,22 @@ on:
   push:
     branches:
       - main
-      - canadaca-tax-rag-implementation
   workflow_dispatch:
 
 env:
-  ACR_NAME: myregistry          # Replace with your ACR name
-  RESOURCE_GROUP: my-rg         # Replace with your Resource Group
-  WEB_APP_NAME: canadaca-web    # Container App Name (Web)
-  JOB_NAME: canadaca-scraper    # Container App Job Name (Job)
+  ACR_NAME: myregistry          # Replace/Set this
+  RESOURCE_GROUP: my-rg         
+  WEB_APP_NAME: canadaca-web
+  JOB_NAME: canadaca-scraper
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
-  build-and-deploy:
+  # Job 1: Build and Push (Runs automatically)
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,17 +30,29 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Log in to ACR
-        run: |
-          az acr login --name ${{ env.ACR_NAME }}
+        run: az acr login --name ${{ env.ACR_NAME }}
 
-      # Build and Push Image
       - name: Build and Push Image
         run: |
           docker build -t ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }} .
           docker push ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }}
-          # Tag as latest too
+          # Tag as latest for convenience
           docker tag ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }} ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:latest
           docker push ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:latest
+
+  # Job 2: Deploy (Waits for Manual Approval)
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: 
+      name: production
+      url: https://${{ env.WEB_APP_NAME }}.${{ env.ACR_NAME }}.canadacentral.azurecontainerapps.io
+    
+    steps:
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # Deploy Web App
       - name: Update Web App Image
@@ -51,7 +63,7 @@ jobs:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           imageToDeploy: ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }}
 
-      # Deploy Scraper Job (Update Image)
+      # Deploy Scraper Job
       - name: Update Scraper Job Image
         run: |
           az containerapp job update \
