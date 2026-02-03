@@ -63,7 +63,7 @@ class Settings(BaseSettings):
     aws_access_key_id: str | None = None
     aws_secret_access_key: str | None = None
     aws_bedrock_model_id: str = "anthropic.claude-3-haiku-20240307-v1:0"
-    aws_bedrock_embedding_model_id: str = "amazon.titan-embed-text-v1"
+    aws_bedrock_embedding_model_id: str = "amazon.titan-embed-text-v2:0"
 
     # ===================
     # Database Settings
@@ -93,7 +93,7 @@ class Settings(BaseSettings):
     chunk_size: int = 1000
     chunk_overlap: int = 200
     retrieval_top_k: int = 5
-    embedding_dimensions: int = 1536  # amazon.titan-embed-text-v1 (use 1024 for v2, 3072 for OpenAI)
+    embedding_dimensions: int = 1024  # amazon.titan-embed-text-v2:0 (use 3072 for OpenAI)
 
     # ===================
     # Scraper Settings

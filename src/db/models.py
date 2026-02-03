@@ -88,7 +88,7 @@ class DocumentChunk(Base):
         String(255), ForeignKey("canadaca.documents.id", ondelete="CASCADE")
     )
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    embedding = Column(Vector(1536))  # amazon.titan-embed-text-v1 (use 1024 for v2)
+    embedding = Column(Vector(1024))  # amazon.titan-embed-text-v2:0
     chunk_index: Mapped[int] = mapped_column(Integer, default=0)
     metadata_: Mapped[dict[str, Any]] = mapped_column(
         "metadata", JSONB, default=dict

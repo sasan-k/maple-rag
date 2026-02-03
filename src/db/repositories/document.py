@@ -231,31 +231,28 @@ class DocumentRepository:
             List of (chunk, similarity_score) tuples
         """
         # Build the query using cosine distance
-        # pgvector: <=> is cosine distance, <#> is inner product
-        embedding_str = f"[{','.join(map(str, embedding))}]"
+        # pgvector: <=> is cosine distance
+        # Format embedding as PostgreSQL array string
+        embedding_str = "[" + ",".join(map(str, embedding)) + "]"
 
         if language:
             query = text("""
-                SELECT dc.*, 1 - (dc.embedding <=> :embedding::vector) as similarity
+                SELECT dc.*, 1 - (dc.embedding <=> CAST(:embedding AS vector)) as similarity
                 FROM canadaca.document_chunks dc
                 JOIN canadaca.documents d ON dc.document_id = d.id
                 WHERE d.language = :language
-                ORDER BY dc.embedding <=> :embedding::vector
+                ORDER BY dc.embedding <=> CAST(:embedding AS vector)
                 LIMIT :k
-            """)
-            result = await self.session.execute(
-                query, {"embedding": embedding_str, "language": language, "k": k}
-            )
+            """).bindparams(embedding=embedding_str, language=language, k=k)
+            result = await self.session.execute(query)
         else:
             query = text("""
-                SELECT dc.*, 1 - (dc.embedding <=> :embedding::vector) as similarity
+                SELECT dc.*, 1 - (dc.embedding <=> CAST(:embedding AS vector)) as similarity
                 FROM canadaca.document_chunks dc
-                ORDER BY dc.embedding <=> :embedding::vector
+                ORDER BY dc.embedding <=> CAST(:embedding AS vector)
                 LIMIT :k
-            """)
-            result = await self.session.execute(
-                query, {"embedding": embedding_str, "k": k}
-            )
+            """).bindparams(embedding=embedding_str, k=k)
+            result = await self.session.execute(query)
 
         rows = result.fetchall()
         chunks_with_scores = []

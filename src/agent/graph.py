@@ -111,13 +111,26 @@ class AgentExecutor:
                 "error": str(e),
             }
 
+        # LangGraph returns a dict, extract values
+        # Handle both dict and AgentState object
+        if isinstance(final_state, dict):
+            response = final_state.get("response", "")
+            sources = final_state.get("sources", [])
+            language = final_state.get("language", "en")
+            metadata = final_state.get("metadata", {})
+        else:
+            response = final_state.response
+            sources = final_state.sources
+            language = final_state.language
+            metadata = final_state.metadata
+
         # Save messages to session
         async with get_db() as db:
             session_repo = SessionRepository(db)
 
             # Update session language
             await session_repo.update_language(
-                current_session_id, final_state.language
+                current_session_id, language
             )
 
             # Save user message
@@ -131,16 +144,16 @@ class AgentExecutor:
             await session_repo.add_message(
                 session_id=current_session_id,
                 role="assistant",
-                content=final_state.response,
-                sources=final_state.sources,
+                content=response,
+                sources=sources,
             )
 
         return {
-            "response": final_state.response,
-            "sources": final_state.sources,
+            "response": response,
+            "sources": sources,
             "session_id": current_session_id,
-            "language": final_state.language,
-            "metadata": final_state.metadata,
+            "language": language,
+            "metadata": metadata,
         }
 
 

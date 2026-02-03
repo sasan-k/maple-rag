@@ -22,7 +22,7 @@ CREATE TABLE canadaca.document_chunks (
     id VARCHAR PRIMARY KEY,
     document_id VARCHAR REFERENCES canadaca.documents(id) ON DELETE CASCADE,
     content TEXT,
-    embedding vector(1536),  -- amazon.titan-embed-text-v1 dimension (use 1024 for v2)
+    embedding vector(1024),  -- amazon.titan-embed-text-v2:0 dimension
     chunk_index INTEGER,
     metadata JSONB DEFAULT '{}',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
