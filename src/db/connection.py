@@ -34,14 +34,19 @@ def get_engine() -> AsyncEngine:
 
         # Add pool settings only for PostgreSQL
         if not settings.database_url.startswith("sqlite"):
-            engine_args.update({
-                "pool_size": settings.database_pool_size,
-                "max_overflow": settings.database_max_overflow,
-            })
+            engine_args.update(
+                {
+                    "pool_size": settings.database_pool_size,
+                    "max_overflow": settings.database_max_overflow,
+                }
+            )
         else:
             # Map 'canadaca' schema to default for SQLite and use StaticPool
             from sqlalchemy.pool import StaticPool
-            engine_args["execution_options"] = {"schema_translate_map": {"canadaca": None}}
+
+            engine_args["execution_options"] = {
+                "schema_translate_map": {"canadaca": None}
+            }
             engine_args["poolclass"] = StaticPool
             engine_args["connect_args"] = {"check_same_thread": False}
 
@@ -84,9 +89,8 @@ async def init_db() -> None:
         # Create pgvector extension if using PostgreSQL
         if engine.dialect.name == "postgresql":
             from sqlalchemy import text
-            await conn.execute(
-                text("CREATE EXTENSION IF NOT EXISTS vector")
-            )
+
+            await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         # Create tables
         await conn.run_sync(Base.metadata.create_all)
 
