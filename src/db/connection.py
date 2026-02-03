@@ -26,14 +26,28 @@ def get_engine() -> AsyncEngine:
     if _engine is None:
         settings = get_settings()
 
-        # Use NullPool for async to avoid connection issues
-        # In production, you may want to configure pool settings
+        # Configure engine args
+        engine_args = {
+            "echo": settings.debug,
+            "pool_pre_ping": True,
+        }
+
+        # Add pool settings only for PostgreSQL
+        if not settings.database_url.startswith("sqlite"):
+            engine_args.update({
+                "pool_size": settings.database_pool_size,
+                "max_overflow": settings.database_max_overflow,
+            })
+        else:
+            # Map 'canadaca' schema to default for SQLite and use StaticPool
+            from sqlalchemy.pool import StaticPool
+            engine_args["execution_options"] = {"schema_translate_map": {"canadaca": None}}
+            engine_args["poolclass"] = StaticPool
+            engine_args["connect_args"] = {"check_same_thread": False}
+
         _engine = create_async_engine(
             settings.database_url,
-            echo=settings.debug,
-            pool_size=settings.database_pool_size,
-            max_overflow=settings.database_max_overflow,
-            pool_pre_ping=True,  # Verify connections before use
+            **engine_args,
         )
 
     return _engine
@@ -67,10 +81,12 @@ async def init_db() -> None:
 
     engine = get_engine()
     async with engine.begin() as conn:
-        # Create pgvector extension if not exists
-        await conn.execute(
-            "CREATE EXTENSION IF NOT EXISTS vector"  # type: ignore
-        )
+        # Create pgvector extension if using PostgreSQL
+        if engine.dialect.name == "postgresql":
+            from sqlalchemy import text
+            await conn.execute(
+                text("CREATE EXTENSION IF NOT EXISTS vector")
+            )
         # Create tables
         await conn.run_sync(Base.metadata.create_all)
 

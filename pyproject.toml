@@ -63,6 +63,7 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.8.0",
     "httpx>=0.26.0",  # For testing FastAPI
+    "aiosqlite>=0.17.0",  # For async SQLite testing
 ]
 
 [build-system]

@@ -3,6 +3,7 @@ Pytest configuration and fixtures.
 """
 
 import asyncio
+import os
 from collections.abc import AsyncGenerator, Generator
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -11,9 +12,10 @@ import pytest_asyncio
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.pool import StaticPool
 
 from src.api.main import app
-from src.config.settings import Settings
+from src.config.settings import Settings, get_settings
 from src.db.models import Base
 
 # Test database URL (SQLite for testing)
@@ -53,6 +55,9 @@ async def test_db_session() -> AsyncGenerator[AsyncSession, None]:
     engine = create_async_engine(
         "sqlite+aiosqlite:///:memory:",
         echo=False,
+        execution_options={"schema_translate_map": {"canadaca": None}},
+        poolclass=StaticPool,
+        connect_args={"check_same_thread": False},
     )
 
     async with engine.begin() as conn:
@@ -73,15 +78,29 @@ async def test_db_session() -> AsyncGenerator[AsyncSession, None]:
 @pytest.fixture
 def client() -> Generator[TestClient, None, None]:
     """Create a test client."""
-    with TestClient(app) as c:
-        yield c
+    # Ensure settings are reloaded from environment
+    get_settings.cache_clear()
+    env_overrides = {
+        "DATABASE_URL": TEST_DATABASE_URL,
+        "ENVIRONMENT": "development",
+    }
+    with patch.dict(os.environ, env_overrides):
+        with TestClient(app) as c:
+            yield c
 
 
 @pytest_asyncio.fixture
 async def async_client() -> AsyncGenerator[AsyncClient, None]:
     """Create an async test client."""
-    async with AsyncClient(app=app, base_url="http://test") as c:
-        yield c
+    # Ensure settings are reloaded from environment
+    get_settings.cache_clear()
+    env_overrides = {
+        "DATABASE_URL": TEST_DATABASE_URL,
+        "ENVIRONMENT": "development",
+    }
+    with patch.dict(os.environ, env_overrides):
+        async with AsyncClient(app=app, base_url="http://test") as c:
+            yield c
 
 
 @pytest.fixture

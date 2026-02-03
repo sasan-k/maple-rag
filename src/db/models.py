@@ -7,6 +7,7 @@ from typing import Any
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
+    JSON,
     Column,
     DateTime,
     ForeignKey,
@@ -17,6 +18,10 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
+# Define types that fall back to generic types for non-Postgres (e.g. SQLite tests)
+JSONVal = JSON().with_variant(JSONB, "postgresql")
+VectorVal = String().with_variant(Vector(1024), "postgresql")
 
 
 class Base(DeclarativeBase):
@@ -61,7 +66,7 @@ class Document(Base):
         String(100), nullable=True
     )  # Track which embedding model was used
 
-    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JSONB, default=dict)
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JSONVal, default=dict)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
     )
@@ -101,9 +106,9 @@ class DocumentChunk(Base):
         String(255), ForeignKey("canadaca.documents.id", ondelete="CASCADE")
     )
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    embedding = Column(Vector(1024))  # amazon.titan-embed-text-v2:0
+    embedding = Column(VectorVal)  # amazon.titan-embed-text-v2:0
     chunk_index: Mapped[int] = mapped_column(Integer, default=0)
-    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JSONB, default=dict)
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JSONVal, default=dict)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
     )
@@ -127,7 +132,7 @@ class ChatSession(Base):
 
     id: Mapped[str] = mapped_column(String(255), primary_key=True)
     language: Mapped[str] = mapped_column(String(2), default="en")
-    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JSONB, default=dict)
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JSONVal, default=dict)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
     )
@@ -162,7 +167,7 @@ class ChatMessage(Base):
     role: Mapped[str] = mapped_column(String(20), nullable=False)  # user, assistant
     content: Mapped[str] = mapped_column(Text, nullable=False)
     sources: Mapped[list[dict[str, Any]]] = mapped_column(
-        JSONB, default=list
+        JSONVal, default=list
     )  # Citation info
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
