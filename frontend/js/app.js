@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const exampleBtns = document.querySelectorAll('.example-btn');
     const langEnBtn = document.getElementById('lang-en');
     const langFrBtn = document.getElementById('lang-fr');
+    const themeToggle = document.getElementById('theme-toggle');
 
     // State
     let isLoading = false;
@@ -22,6 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
 
     function init() {
+        // Load saved theme preference
+        loadTheme();
+
+        // Fetch last updated date
+        fetchLastUpdated();
+
         // Event listeners
         messageInput.addEventListener('input', handleInputChange);
         messageInput.addEventListener('keydown', handleKeyDown);
@@ -39,9 +46,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
         langEnBtn.addEventListener('click', () => setLanguage('en'));
         langFrBtn.addEventListener('click', () => setLanguage('fr'));
+        themeToggle.addEventListener('click', toggleTheme);
 
         // Auto-resize textarea
         messageInput.addEventListener('input', autoResizeTextarea);
+    }
+
+    // Theme Management
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        } else {
+            // Default to light theme, or check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        if (newTheme === 'light') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+
+        localStorage.setItem('theme', newTheme);
     }
 
     function handleInputChange() {
@@ -110,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
-        avatar.textContent = role === 'user' ? '👤' : '🍁';
+        avatar.textContent = role === 'user' ? '👤' : '🤖';
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
@@ -207,13 +242,58 @@ document.addEventListener('DOMContentLoaded', () => {
             fr: 'Posez une question sur les impôts canadiens...',
         };
         messageInput.placeholder = placeholders[lang] || placeholders.en;
+
+        // Update welcome text if visible
+        updateWelcomeText(lang);
+    }
+
+    function updateWelcomeText(lang) {
+        const h1 = welcomeSection.querySelector('h1');
+        const p = welcomeSection.querySelector('.welcome-content > p');
+        const h3 = welcomeSection.querySelector('.example-questions h3');
+
+        if (lang === 'fr') {
+            if (h1) h1.textContent = "Bienvenue à l'Assistant Fiscal";
+            if (p) p.textContent = "Posez-moi des questions sur les impôts canadiens, les déclarations, les crédits, les déductions et plus encore.";
+            if (h3) h3.textContent = "Essayez de demander:";
+        } else {
+            if (h1) h1.textContent = "Welcome to Tax Info Assistant";
+            if (p) p.textContent = "Ask me questions about Canadian taxes, filing returns, credits, deductions, and more. I use information from official government sources.";
+            if (h3) h3.textContent = "Try asking:";
+        }
     }
 
     function getErrorMessage(lang) {
         const messages = {
-            en: "I'm sorry, I encountered an error processing your request. Please try again or visit canada.ca directly for information.",
-            fr: "Je suis désolé, j'ai rencontré une erreur en traitant votre demande. Veuillez réessayer ou visiter canada.ca directement.",
+            en: "I'm sorry, I encountered an error processing your request. Please try again or visit the official government website directly for information.",
+            fr: "Je suis désolé, j'ai rencontré une erreur en traitant votre demande. Veuillez réessayer ou visiter le site officiel du gouvernement.",
         };
         return messages[lang] || messages.en;
+    }
+
+    async function fetchLastUpdated() {
+        try {
+            const response = await fetch(`${chatAPI.baseUrl.replace('/chat', '')}/admin/stats`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.last_updated) {
+                    const lastUpdatedEl = document.getElementById('last-updated');
+                    if (lastUpdatedEl) {
+                        const date = new Date(data.last_updated);
+                        const formatted = date.toLocaleDateString(currentLanguage === 'fr' ? 'fr-CA' : 'en-CA', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        const label = currentLanguage === 'fr' ? 'Dernière mise à jour' : 'Data last updated';
+                        lastUpdatedEl.textContent = `📅 ${label}: ${formatted}`;
+                    }
+                }
+            }
+        } catch (error) {
+            console.log('Could not fetch last updated date:', error);
+        }
     }
 });

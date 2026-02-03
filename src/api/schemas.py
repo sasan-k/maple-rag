@@ -147,3 +147,4 @@ class StatsResponse(BaseModel):
     documents: int
     chunks: int
     sessions: int | None = None
+    last_updated: str | None = None

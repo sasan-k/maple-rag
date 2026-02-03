@@ -2,6 +2,14 @@
 
 ## High Priority
 
+### Legal & Compliance
+- [ ] **Add Terms and Conditions page**
+  - Disclaimer that this is not an official Government of Canada service
+  - Data usage and privacy policy
+  - Accuracy disclaimer (AI-generated content may contain errors)
+  - Citation to official canada.ca sources
+  - Contact information
+
 ### Scheduled Jobs
 - [ ] **Set up scheduled job for nightly updates**
   - Configure cron (Linux) or Task Scheduler (Windows) for nightly incremental ingestion

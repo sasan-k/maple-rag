@@ -90,14 +90,24 @@ async def get_stats(
     db: AsyncSession = Depends(get_db_session),
 ) -> StatsResponse:
     """Get system statistics."""
+    from sqlalchemy import func, select
+    from src.db.models import Document
+    
     doc_repo = DocumentRepository(db)
 
     documents = await doc_repo.get_document_count()
     chunks = await doc_repo.get_chunk_count()
+    
+    # Get the most recent scrape date
+    result = await db.execute(
+        select(func.max(Document.last_scraped_at))
+    )
+    last_updated = result.scalar()
 
     return StatsResponse(
         documents=documents,
         chunks=chunks,
+        last_updated=last_updated.isoformat() if last_updated else None,
     )
 
 
