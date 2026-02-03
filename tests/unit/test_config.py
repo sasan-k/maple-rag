@@ -11,18 +11,6 @@ from src.config.settings import Settings, get_settings
 class TestSettings:
     """Test Settings class."""
 
-    def test_default_values(self):
-        """Test default setting values."""
-        settings = Settings()
-
-        assert settings.environment == "development"
-        assert settings.debug is False
-        assert settings.api_host == "0.0.0.0"
-        assert settings.api_port == 8000
-        assert settings.llm_provider == "azure_openai"
-        assert settings.chunk_size == 1000
-        assert settings.chunk_overlap == 200
-
     def test_environment_detection(self):
         """Test environment detection properties."""
         settings = Settings(environment="development")

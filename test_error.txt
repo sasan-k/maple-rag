@@ -1,0 +1,31 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-7.3.2, pluggy-1.6.0 -- C:\Users\skhay\source\canada.ca\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\skhay\source\canada.ca
+configfile: pyproject.toml
+plugins: anyio-4.12.1, langsmith-0.6.7, asyncio-0.21.2
+asyncio: mode=Mode.AUTO
+collecting ... collected 5 items
+
+tests/unit/test_config.py::TestSettings::test_default_values FAILED      [ 20%]
+tests/unit/test_config.py::TestSettings::test_environment_detection PASSED [ 40%]
+tests/unit/test_config.py::TestSettings::test_database_url_validation PASSED [ 60%]
+tests/unit/test_config.py::TestSettings::test_from_environment PASSED    [ 80%]
+tests/unit/test_config.py::TestSettings::test_get_settings_cached PASSED [100%]
+
+================================== FAILURES ===================================
+______________________ TestSettings.test_default_values _______________________
+tests\unit\test_config.py:23: in test_default_values
+    assert settings.llm_provider == "azure_openai"
+E   AssertionError: assert 'aws_bedrock' == 'azure_openai'
+E     - azure_openai
+E     + aws_bedrock
+============================== warnings summary ===============================
+.venv\Lib\site-packages\langchain_core\_api\deprecation.py:25
+  C:\Users\skhay\source\canada.ca\.venv\Lib\site-packages\langchain_core\_api\deprecation.py:25: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+    from pydantic.v1.fields import FieldInfo as FieldInfoV1
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/unit/test_config.py::TestSettings::test_default_values - Asserti...
+=================== 1 failed, 4 passed, 1 warning in 0.36s ====================
