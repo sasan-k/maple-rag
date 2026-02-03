@@ -1,0 +1,13 @@
+B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+  --> src\api\routes\chat.py:67:9
+   |
+65 |       except Exception as e:
+66 |           logger.error(f"Chat error: {e}")
+67 | /         raise HTTPException(
+68 | |             status_code=500,
+69 | |             detail="An error occurred processing your request",
+70 | |         )
+   | |_________^
+   |
+
+Found 1 error.

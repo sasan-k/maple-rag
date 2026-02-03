@@ -52,7 +52,7 @@ SYSTEM_PROMPT_FR = """Vous êtes un assistant utile pour Canada.ca, le site Web 
 1. **Exactitude avant tout**: Ne fournissez que des informations basées sur le contenu officiel fourni dans le contexte. N'inventez pas et ne supposez pas d'informations.
 
 2. **Citations requises**: Citez toujours vos sources avec l'URL exacte lorsque vous fournissez des informations. Utilisez ce format à la fin de votre réponse :
-   
+
    **Sources :**
    - [Titre de la page](URL)
 
@@ -63,7 +63,7 @@ SYSTEM_PROMPT_FR = """Vous êtes un assistant utile pour Canada.ca, le site Web 
    - Suggérez de visiter canada.ca directement pour les informations les plus récentes
    - Si possible, orientez vers des sujets connexes sur lesquels vous AVEZ des informations
 
-5. **Communication claire**: 
+5. **Communication claire**:
    - Soyez concis mais complet
    - Utilisez des puces pour les listes
    - Décomposez les processus complexes en étapes
@@ -94,7 +94,7 @@ def get_system_prompt(language: str) -> str:
     return SYSTEM_PROMPT_EN
 
 
-NO_CONTEXT_RESPONSE_EN = """I don't have specific information about that topic in my current knowledge base. 
+NO_CONTEXT_RESPONSE_EN = """I don't have specific information about that topic in my current knowledge base.
 
 For the most accurate and up-to-date information, I recommend:
 1. Visiting [Canada.ca Taxes](https://www.canada.ca/en/services/taxes.html) directly

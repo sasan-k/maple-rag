@@ -67,7 +67,7 @@ async def chat(request: ChatRequest) -> ChatResponse:
         raise HTTPException(
             status_code=500,
             detail="An error occurred processing your request",
-        )
+        ) from e
 
 
 @router.get(

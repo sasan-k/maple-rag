@@ -82,8 +82,8 @@ async def init_database():
         async with engine.connect() as conn:
             result = await conn.execute(
                 text("""
-                SELECT table_name 
-                FROM information_schema.tables 
+                SELECT table_name
+                FROM information_schema.tables
                 WHERE table_schema = 'canadaca'
                 ORDER BY table_name
             """)

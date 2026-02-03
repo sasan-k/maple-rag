@@ -198,7 +198,7 @@ async def main():
         return 1
 
     # Test 3: Embeddings
-    embeddings = await test_embeddings(chunks)
+    await test_embeddings(chunks)
 
     # Test 4: Chat with context
     await test_chat_with_context(chunks)
