@@ -1,0 +1,59 @@
+name: Deploy to Azure Container Apps
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  ACR_NAME: myregistry          # Replace with your ACR name
+  RESOURCE_GROUP: my-rg         # Replace with your Resource Group
+  WEB_APP_NAME: canadaca-web    # Container App Name (Web)
+  JOB_NAME: canadaca-scraper    # Container App Job Name (Job)
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to ACR
+        run: |
+          az acr login --name ${{ env.ACR_NAME }}
+
+      # Build and Push Image
+      - name: Build and Push Image
+        run: |
+          docker build -t ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }} .
+          docker push ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }}
+          # Tag as latest too
+          docker tag ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }} ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:latest
+          docker push ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:latest
+
+      # Deploy Web App
+      - name: Update Web App Image
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          acrName: ${{ env.ACR_NAME }}
+          containerAppName: ${{ env.WEB_APP_NAME }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          imageToDeploy: ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }}
+
+      # Deploy Scraper Job (Update Image)
+      - name: Update Scraper Job Image
+        run: |
+          az containerapp job update \
+            --name ${{ env.JOB_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }}

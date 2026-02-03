@@ -50,6 +50,9 @@ dependencies = [
     # Azure (optional, for Azure-specific services)
     "azure-identity>=1.15.0",
     "azure-ai-contentsafety>=1.0.0",
+    
+    # Scheduling
+    "apscheduler>=3.10.0",
 ]
 
 [project.optional-dependencies]

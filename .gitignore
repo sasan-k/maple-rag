@@ -84,3 +84,4 @@ scraped_content/
 chat_*.json
 test_*.json
 ingest_output.txt
+ingest_log*.txt

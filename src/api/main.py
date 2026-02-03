@@ -8,6 +8,7 @@ from typing import AsyncGenerator
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from src.api.routes import admin_router, chat_router, health_router
 from src.config.logging import get_logger, setup_logging
@@ -35,10 +36,15 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         logger.error(f"Failed to initialize database: {e}")
         # Continue anyway - might be using external DB
 
+    # Start scheduler for background tasks
+    # from src.api.scheduler import start_scheduler, stop_scheduler
+    # start_scheduler()
+
     yield
 
     # Shutdown
     logger.info("Shutting down")
+    # stop_scheduler()
     await close_db()
 
 
@@ -68,6 +74,12 @@ def create_app() -> FastAPI:
     app.include_router(health_router, tags=["health"])
     app.include_router(chat_router, prefix="/api/v1")
     app.include_router(admin_router, prefix="/api/v1")
+    
+    # Mount frontend static files
+    import os
+    frontend_path = os.path.join(os.getcwd(), "frontend")
+    if os.path.exists(frontend_path):
+        app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
 
     # Global exception handler
     @app.exception_handler(Exception)
