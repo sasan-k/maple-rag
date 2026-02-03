@@ -9,6 +9,8 @@ from typing import Any
 from langgraph.graph import END, StateGraph
 
 from src.agent.nodes import detect_language, generate, retrieve
+from src.agent.nodes.guardrail import guardrail
+from src.agent.nodes.refusal import generate_refusal
 from src.agent.state import AgentState
 from src.config.logging import get_logger
 from src.db.connection import get_db
@@ -34,13 +36,33 @@ def create_agent_graph() -> StateGraph:
 
     # Add nodes
     graph.add_node("detect_language", detect_language)
+    graph.add_node("guardrail", guardrail)
     graph.add_node("retrieve", retrieve)
     graph.add_node("generate", generate)
+    graph.add_node("refusal", generate_refusal)
 
     # Define edges
-    graph.add_edge("detect_language", "retrieve")
+    graph.add_edge("detect_language", "guardrail")
+    
+    # Conditional edge from guardrail
+    def route_guardrail(state: AgentState) -> str:
+        """Route based on guardrail check."""
+        if state.metadata.get("is_off_topic", False):
+            return "refusal"
+        return "retrieve"
+
+    graph.add_conditional_edges(
+        "guardrail",
+        route_guardrail,
+        {
+            "refusal": "refusal",
+            "retrieve": "retrieve"
+        }
+    )
+    
     graph.add_edge("retrieve", "generate")
     graph.add_edge("generate", END)
+    graph.add_edge("refusal", END)
 
     # Set entry point
     graph.set_entry_point("detect_language")

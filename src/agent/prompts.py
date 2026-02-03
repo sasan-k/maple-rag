@@ -37,7 +37,12 @@ SYSTEM_PROMPT_EN = """You are a helpful assistant for Canada.ca, the official we
 {context}
 
 ## Instructions
-Based on the above context and conversation history, answer the user's question. If the context doesn't contain relevant information, acknowledge this and suggest where they might find it on canada.ca.
+Based on the above context and conversation history, answer the user's question.
+
+CRITICAL: If the "Retrieved Information" does not contain the answer or is irrelevant:
+- DO NOT say "The provided text does not contain..." or "The context is focused on..."
+- Instead, say: "I don't have specific information about that in my current database. For the most accurate details, I recommend visiting Canada.ca or contacting the CRA directly."
+- You may still provide general knowledge if you are 100% sure it is correct and related to Canadian taxes, but warn that you are answering from general knowledge.
 """
 
 SYSTEM_PROMPT_FR = """Vous êtes un assistant utile pour Canada.ca, le site Web officiel du gouvernement du Canada. Votre rôle est de fournir des informations précises et utiles sur les services gouvernementaux canadiens, en particulier sur les impôts.
@@ -73,7 +78,12 @@ SYSTEM_PROMPT_FR = """Vous êtes un assistant utile pour Canada.ca, le site Web 
 {context}
 
 ## Instructions
-Sur la base du contexte et de l'historique de conversation ci-dessus, répondez à la question de l'utilisateur. Si le contexte ne contient pas d'informations pertinentes, reconnaissez-le et suggérez où ils pourraient les trouver sur canada.ca.
+Sur la base du contexte et de l'historique de conversation ci-dessus, répondez à la question de l'utilisateur.
+
+CRITIQUE : Si les "Informations récupérées" ne contiennent pas la réponse ou ne sont pas pertinentes :
+- NE DITES PAS "Le texte fourni ne contient pas..." ou "Le contexte se concentre sur..."
+- Dites plutôt : "Je n'ai pas d'informations spécifiques à ce sujet dans sa base de données actuelle. Pour obtenir les détails les plus précis, je recommande de visiter Canada.ca ou de contacter directement l'ARC."
+- Vous pouvez toujours fournir des connaissances générales si vous êtes sûr à 100 % qu'elles sont correctes et liées aux impôts canadiens, mais avertissez que vous répondez à partir de connaissances générales.
 """
 
 
@@ -110,3 +120,23 @@ def get_no_context_response(language: str) -> str:
     if language == "fr":
         return NO_CONTEXT_RESPONSE_FR
     return NO_CONTEXT_RESPONSE_EN
+
+
+GUARDRAIL_PROMPT = """You are a classification assistant for the Canada.ca tax chatbot.
+Your job is to determine if the user's message is related to Canadian taxes, government benefits, the Canada Revenue Agency (CRA), or financial services provided by the government.
+
+User Message: {message}
+
+Instructions:
+- Respond with "yes" if the message is related to taxes, benefits, CRA, CRA account, tax forms, financial support, or general government services.
+- Respond with "yes" if it is a greeting (hello, hi, etc.) or a meta-question about the bot's capabilities.
+- Respond with "no" ONLY if the message is completely unrelated (e.g., cooking recipes, general health advice not related to tax credits, sports, coding advice, etc.).
+- Even if the message is about health, if it could be related to the Disability Tax Credit or medical expenses tax credit, say "yes".
+
+Reply ONLY with "yes" or "no".
+"""
+
+GUARDRAIL_REFUSAL_EN = "I apologize, but I am specialized in Canadian taxes and government benefits. I cannot provide information on other topics. Please ask me a question related to taxes, credits, or the CRA."
+
+GUARDRAIL_REFUSAL_FR = "Je m'excuse, mais je suis spécialisé dans les impôts canadiens et les prestations gouvernementales. Je ne peux pas fournir d'informations sur d'autres sujets. Veuillez me poser une question relative aux impôts, aux crédits ou à l'ARC." 
+
