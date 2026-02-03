@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - canadaca-tax-rag-implementation
   workflow_dispatch:
 
 env:
