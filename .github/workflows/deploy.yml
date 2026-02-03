@@ -1,4 +1,4 @@
-name: Deploy to Azure Container Apps
+name: CD - Deploy to Production
 
 on:
   push:
@@ -39,11 +39,11 @@ jobs:
 
       - name: Build and Push Image
         run: |
-          docker build -t ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }} .
-          docker push ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }}
+          docker build -t ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }} .
+          docker push ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }}
           # Tag as latest for convenience
-          docker tag ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }} ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:latest
-          docker push ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:latest
+          docker tag ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }} ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:latest
+          docker push ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:latest
 
   # Job 2: Deploy (Waits for Manual Approval)
   deploy:
@@ -66,7 +66,7 @@ jobs:
           acrName: ${{ env.ACR_NAME }}
           containerAppName: ${{ env.WEB_APP_NAME }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
-          imageToDeploy: ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }}
+          imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }}
 
       # Deploy Scraper Job
       - name: Update Scraper Job Image
@@ -74,4 +74,4 @@ jobs:
           az containerapp job update \
             --name ${{ env.JOB_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --image ${{ env.ACR_NAME }.azurecr.io/canadaca-chat:${{ github.sha }}
+            --image ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }}
