@@ -2,11 +2,9 @@
 Tests for API endpoints.
 """
 
-import pytest
-from fastapi.testclient import TestClient
-from unittest.mock import patch, AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
-from src.api.main import app
+from fastapi.testclient import TestClient
 
 
 class TestHealthEndpoints:

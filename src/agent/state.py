@@ -5,9 +5,7 @@ Defines the state that flows through the LangGraph agent.
 """
 
 from dataclasses import dataclass, field
-from typing import Annotated, Any
-
-from langgraph.graph.message import add_messages
+from typing import Any
 
 
 @dataclass

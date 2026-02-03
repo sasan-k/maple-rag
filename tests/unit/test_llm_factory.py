@@ -2,18 +2,17 @@
 Tests for LLM factory.
 """
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from src.config.settings import Settings
 from src.llm.factory import (
-    LLMFactory,
-    EmbeddingFactory,
-    LLMProviderError,
-    AzureOpenAIProvider,
-    OpenAIProvider,
     AnthropicProvider,
+    AzureOpenAIProvider,
+    LLMFactory,
+    LLMProviderError,
+    OpenAIProvider,
 )
 
 

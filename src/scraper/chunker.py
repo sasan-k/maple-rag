@@ -25,7 +25,7 @@ class RecursiveTextSplitter:
     
     Pure Python implementation to avoid dependency issues.
     """
-    
+
     def __init__(
         self,
         chunk_size: int = 1000,
@@ -45,7 +45,7 @@ class RecursiveTextSplitter:
             " ",  # Word breaks
             "",  # Character breaks (last resort)
         ]
-    
+
     def _split_text_with_separator(
         self, text: str, separator: str
     ) -> list[str]:
@@ -54,7 +54,7 @@ class RecursiveTextSplitter:
             return text.split(separator)
         # Empty separator means split by character
         return list(text)
-    
+
     def _merge_splits(
         self, splits: list[str], separator: str
     ) -> list[str]:
@@ -62,15 +62,15 @@ class RecursiveTextSplitter:
         chunks = []
         current_chunk: list[str] = []
         current_length = 0
-        
+
         for split in splits:
             split_length = len(split) + len(separator)
-            
+
             if current_length + split_length > self.chunk_size and current_chunk:
                 # Save current chunk
                 chunk_text = separator.join(current_chunk)
                 chunks.append(chunk_text)
-                
+
                 # Start new chunk with overlap
                 overlap_length = 0
                 overlap_splits = []
@@ -80,40 +80,40 @@ class RecursiveTextSplitter:
                         overlap_length += len(s) + len(separator)
                     else:
                         break
-                
+
                 current_chunk = overlap_splits
                 current_length = sum(len(s) + len(separator) for s in current_chunk)
-            
+
             current_chunk.append(split)
             current_length += split_length
-        
+
         # Add final chunk
         if current_chunk:
             chunks.append(separator.join(current_chunk))
-        
+
         return chunks
-    
+
     def _split_recursive(
         self, text: str, separators: list[str]
     ) -> list[str]:
         """Recursively split text using separators."""
         if not separators:
             return [text]
-        
+
         separator = separators[0]
         remaining_separators = separators[1:]
-        
+
         splits = self._split_text_with_separator(text, separator)
-        
+
         # Filter out empty splits
         splits = [s for s in splits if s.strip()]
-        
+
         if not splits:
             return []
-        
+
         # Merge splits into chunks
         chunks = self._merge_splits(splits, separator)
-        
+
         # Recursively split chunks that are too large
         final_chunks = []
         for chunk in chunks:
@@ -123,9 +123,9 @@ class RecursiveTextSplitter:
                 final_chunks.extend(sub_chunks)
             else:
                 final_chunks.append(chunk)
-        
+
         return final_chunks
-    
+
     def split_text(self, text: str) -> list[str]:
         """Split text into chunks."""
         if not text or not text.strip():

@@ -46,7 +46,7 @@ class Document(Base):
     content: Mapped[str | None] = mapped_column(Text)
     content_hash: Mapped[str | None] = mapped_column(String(64))
     language: Mapped[str] = mapped_column(String(2), default="en")
-    
+
     # Incremental scraping fields
     sitemap_lastmod: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
@@ -60,7 +60,7 @@ class Document(Base):
     embedding_version: Mapped[str | None] = mapped_column(
         String(100), nullable=True
     )  # Track which embedding model was used
-    
+
     metadata_: Mapped[dict[str, Any]] = mapped_column(
         "metadata", JSONB, default=dict
     )

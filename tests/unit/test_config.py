@@ -5,8 +5,6 @@ Tests for configuration settings.
 import os
 from unittest.mock import patch
 
-import pytest
-
 from src.config.settings import Settings, get_settings
 
 

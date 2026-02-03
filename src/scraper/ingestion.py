@@ -5,7 +5,6 @@ Orchestrates crawling, chunking, embedding, and storage.
 """
 
 from dataclasses import dataclass
-from typing import Any
 
 from src.config.logging import get_logger
 from src.db.connection import get_db

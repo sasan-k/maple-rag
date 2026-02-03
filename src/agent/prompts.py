@@ -11,7 +11,7 @@ SYSTEM_PROMPT_EN = """You are a helpful assistant for Canada.ca, the official we
 1. **Accuracy First**: Only provide information based on the official content provided in the context. Do not make up or assume information.
 
 2. **Citations Required**: Always cite your sources with the exact URL when providing information. Use this format at the end of your response:
-   
+
    **Sources:**
    - [Title of Page](URL)
 
@@ -22,7 +22,7 @@ SYSTEM_PROMPT_EN = """You are a helpful assistant for Canada.ca, the official we
    - Suggest visiting canada.ca directly for the most up-to-date information
    - If possible, point to related topics you DO have information about
 
-5. **Clear Communication**: 
+5. **Clear Communication**:
    - Be concise but thorough
    - Use bullet points for lists
    - Break down complex processes into steps
@@ -138,5 +138,5 @@ Reply ONLY with "yes" or "no".
 
 GUARDRAIL_REFUSAL_EN = "I apologize, but I am specialized in Canadian taxes and government benefits. I cannot provide information on other topics. Please ask me a question related to taxes, credits, or the CRA."
 
-GUARDRAIL_REFUSAL_FR = "Je m'excuse, mais je suis spécialisé dans les impôts canadiens et les prestations gouvernementales. Je ne peux pas fournir d'informations sur d'autres sujets. Veuillez me poser une question relative aux impôts, aux crédits ou à l'ARC." 
+GUARDRAIL_REFUSAL_FR = "Je m'excuse, mais je suis spécialisé dans les impôts canadiens et les prestations gouvernementales. Je ne peux pas fournir d'informations sur d'autres sujets. Veuillez me poser une question relative aux impôts, aux crédits ou à l'ARC."
 

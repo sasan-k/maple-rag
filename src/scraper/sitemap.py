@@ -9,7 +9,6 @@ import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import AsyncIterator
 
 import httpx
 

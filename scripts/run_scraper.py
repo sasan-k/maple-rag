@@ -19,11 +19,11 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.config.logging import setup_logging, get_logger
+from src.config.logging import get_logger, setup_logging
 from src.scraper.ingestion import (
-    IngestionPipeline,
     CANADA_TAX_URLS,
     CANADA_TAX_URLS_FR,
+    IngestionPipeline,
 )
 
 logger = get_logger("scripts.scraper")

@@ -43,7 +43,7 @@ def create_agent_graph() -> StateGraph:
 
     # Define edges
     graph.add_edge("detect_language", "guardrail")
-    
+
     # Conditional edge from guardrail
     def route_guardrail(state: AgentState) -> str:
         """Route based on guardrail check."""
@@ -59,7 +59,7 @@ def create_agent_graph() -> StateGraph:
             "retrieve": "retrieve"
         }
     )
-    
+
     graph.add_edge("retrieve", "generate")
     graph.add_edge("generate", END)
     graph.add_edge("refusal", END)

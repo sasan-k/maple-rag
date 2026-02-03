@@ -6,9 +6,10 @@ Handles scraping, HTML parsing, and content extraction.
 
 import asyncio
 import re
+from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, AsyncGenerator
+from typing import Any
 from urllib.parse import urljoin, urlparse
 
 import httpx

@@ -1,5 +1,5 @@
 """LangGraph agent module."""
 
-from src.agent.graph import create_agent, AgentExecutor
+from src.agent.graph import AgentExecutor, create_agent
 
 __all__ = ["create_agent", "AgentExecutor"]

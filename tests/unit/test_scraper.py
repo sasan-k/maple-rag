@@ -2,12 +2,11 @@
 Tests for web scraper.
 """
 
-import pytest
 
 from bs4 import BeautifulSoup
 
-from src.scraper.crawler import CanadaCrawler, ScrapedPage
 from src.scraper.chunker import ContentChunker
+from src.scraper.crawler import CanadaCrawler, ScrapedPage
 
 
 class TestCanadaCrawler:

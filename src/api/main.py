@@ -2,8 +2,8 @@
 FastAPI application entry point.
 """
 
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -74,7 +74,7 @@ def create_app() -> FastAPI:
     app.include_router(health_router, tags=["health"])
     app.include_router(chat_router, prefix="/api/v1")
     app.include_router(admin_router, prefix="/api/v1")
-    
+
     # Mount frontend static files
     import os
     frontend_path = os.path.join(os.getcwd(), "frontend")

@@ -15,8 +15,8 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.config.logging import setup_logging, get_logger
-from src.db.connection import get_engine, close_db
+from src.config.logging import get_logger, setup_logging
+from src.db.connection import close_db, get_engine
 from src.db.models import Base
 
 logger = get_logger("scripts.migrate")

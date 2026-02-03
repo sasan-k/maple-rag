@@ -6,7 +6,6 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 from src.config.logging import get_logger
-from src.config.settings import get_settings
 
 logger = get_logger("scheduler")
 
@@ -18,17 +17,14 @@ async def scheduled_ingestion_job() -> None:
     logger.info("Starting scheduled ingestion job")
     try:
         # Import here to avoid circular dependencies
-        import sys
-        import os
-        
         # Ensure scripts are in path if needed, though we can import module
         # Since incremental_ingest is in scripts/, we need to be careful
         # We'll use subprocess to run it to ensure clean slate and memory isolation
-        # Or we can refactor code. 
+        # Or we can refactor code.
         # For simplicity and isolation in a long-running web process, subprocess is safer to avoid memory leaks.
-        
         import asyncio
-        
+        import sys
+
         # Run generic taxes scrape
         logger.info("Scraping generic taxes...")
         proc1 = await asyncio.create_subprocess_exec(
@@ -43,7 +39,7 @@ async def scheduled_ingestion_job() -> None:
             logger.error(f"Ingestion failed: {stderr.decode()}")
         else:
             logger.info("Ingestion (Taxes) completed")
-            
+
         # Run business taxes scrape
         logger.info("Scraping business taxes...")
         proc2 = await asyncio.create_subprocess_exec(
@@ -58,7 +54,7 @@ async def scheduled_ingestion_job() -> None:
             logger.error(f"Ingestion failed: {stderr.decode()}")
         else:
             logger.info("Ingestion (Business) completed")
-            
+
     except Exception as e:
         logger.error(f"Error in scheduled job: {e}")
 
@@ -75,7 +71,7 @@ def start_scheduler() -> None:
         id="incremental_ingest",
         replace_existing=True,
     )
-    
+
     scheduler.start()
     logger.info("Scheduler started")
 

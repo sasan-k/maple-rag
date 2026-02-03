@@ -198,7 +198,7 @@ class AWSBedrockProvider(BaseLLMProvider):
         # If explicit credentials are provided, validate them
         if settings.aws_access_key_id and settings.aws_secret_access_key:
             return True
-        
+
         # Otherwise, try to use boto3's default credential chain
         try:
             import boto3
@@ -223,7 +223,7 @@ class AWSBedrockProvider(BaseLLMProvider):
             }
 
         model_id = kwargs.get("model_id", settings.aws_bedrock_model_id)
-        
+
         return ChatBedrock(
             model_id=model_id,
             region_name=kwargs.get("region_name", settings.aws_region),

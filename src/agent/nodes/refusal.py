@@ -14,14 +14,14 @@ async def generate_refusal(state: AgentState) -> AgentState:
     Generate a refusal message for off-topic queries.
     """
     logger.info("Generating refusal message")
-    
+
     # Check language
     if state.language == "fr":
         state.response = GUARDRAIL_REFUSAL_FR
     else:
         state.response = GUARDRAIL_REFUSAL_EN
-        
+
     # Remove sources since we aren't answering
     state.sources = []
-    
+
     return state
