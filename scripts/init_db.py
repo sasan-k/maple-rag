@@ -62,7 +62,9 @@ async def init_database():
                 print("[OK] pgvector extension enabled")
             except Exception as e:
                 print(f"[WARN] Could not enable pgvector: {e}")
-                print("       You may need to run: CREATE EXTENSION vector; as superuser")
+                print(
+                    "       You may need to run: CREATE EXTENSION vector; as superuser"
+                )
 
         # Create schema
         print("\n[INFO] Creating database schema...")
@@ -78,12 +80,14 @@ async def init_database():
 
         # Verify tables
         async with engine.connect() as conn:
-            result = await conn.execute(text("""
+            result = await conn.execute(
+                text("""
                 SELECT table_name 
                 FROM information_schema.tables 
                 WHERE table_schema = 'canadaca'
                 ORDER BY table_name
-            """))
+            """)
+            )
             tables = [row[0] for row in result.fetchall()]
 
             print("\n[INFO] Created tables in 'canadaca' schema:")
@@ -126,16 +130,20 @@ async def verify_pgvector():
 
         async with engine.connect() as conn:
             # Test vector operations
-            result = await conn.execute(text("""
+            result = await conn.execute(
+                text("""
                 SELECT '[1,2,3]'::vector <-> '[4,5,6]'::vector as distance
-            """))
+            """)
+            )
             distance = result.scalar()
             print(f"\n[OK] Vector distance calculation works: {distance}")
 
             # Check vector dimension support
-            result = await conn.execute(text("""
+            result = await conn.execute(
+                text("""
                 SELECT '[1,2,3,4,5]'::vector(5) as vec
-            """))
+            """)
+            )
             print("[OK] Vector with dimension constraint works")
 
         await engine.dispose()

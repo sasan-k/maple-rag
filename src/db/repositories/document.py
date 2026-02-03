@@ -38,9 +38,7 @@ class DocumentRepository:
 
     async def get_by_url(self, url: str) -> Document | None:
         """Get a document by URL."""
-        result = await self.session.execute(
-            select(Document).where(Document.url == url)
-        )
+        result = await self.session.execute(select(Document).where(Document.url == url))
         return result.scalar_one_or_none()
 
     async def create(

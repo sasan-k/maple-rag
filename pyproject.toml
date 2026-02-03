@@ -107,6 +107,7 @@ ignore = [
 
 [tool.ruff.format]
 quote-style = "double"
+line-ending = "lf"
 
 [tool.mypy]
 python_version = "3.9"

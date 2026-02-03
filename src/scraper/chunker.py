@@ -22,7 +22,7 @@ class Chunk:
 class RecursiveTextSplitter:
     """
     Simple recursive text splitter.
-    
+
     Pure Python implementation to avoid dependency issues.
     """
 
@@ -46,18 +46,14 @@ class RecursiveTextSplitter:
             "",  # Character breaks (last resort)
         ]
 
-    def _split_text_with_separator(
-        self, text: str, separator: str
-    ) -> list[str]:
+    def _split_text_with_separator(self, text: str, separator: str) -> list[str]:
         """Split text by separator."""
         if separator:
             return text.split(separator)
         # Empty separator means split by character
         return list(text)
 
-    def _merge_splits(
-        self, splits: list[str], separator: str
-    ) -> list[str]:
+    def _merge_splits(self, splits: list[str], separator: str) -> list[str]:
         """Merge splits into chunks of appropriate size."""
         chunks = []
         current_chunk: list[str] = []
@@ -93,9 +89,7 @@ class RecursiveTextSplitter:
 
         return chunks
 
-    def _split_recursive(
-        self, text: str, separators: list[str]
-    ) -> list[str]:
+    def _split_recursive(self, text: str, separators: list[str]) -> list[str]:
         """Recursively split text using separators."""
         if not separators:
             return [text]
@@ -225,4 +219,3 @@ class ContentChunker:
         }
 
         return self.chunk_text(content, base_metadata)
-

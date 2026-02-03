@@ -1,0 +1,11 @@
+# Enforce Unix line endings for Python files
+*.py text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+Dockerfile text eol=lf
+
+# Default
+* text=auto

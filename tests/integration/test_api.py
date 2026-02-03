@@ -54,7 +54,9 @@ class TestChatEndpoints:
         """Test successful chat request."""
         mock_result = {
             "response": "Here is information about taxes...",
-            "sources": [{"title": "Tax Guide", "url": "https://canada.ca", "snippet": "..."}],
+            "sources": [
+                {"title": "Tax Guide", "url": "https://canada.ca", "snippet": "..."}
+            ],
             "session_id": "test-session-123",
             "language": "en",
             "metadata": {},
@@ -62,9 +64,7 @@ class TestChatEndpoints:
 
         with patch(
             "src.api.routes.chat.get_agent",
-            return_value=MagicMock(
-                chat=AsyncMock(return_value=mock_result)
-            ),
+            return_value=MagicMock(chat=AsyncMock(return_value=mock_result)),
         ):
             response = client.post(
                 "/api/v1/chat",
@@ -89,9 +89,7 @@ class TestChatEndpoints:
 
         with patch(
             "src.api.routes.chat.get_agent",
-            return_value=MagicMock(
-                chat=AsyncMock(return_value=mock_result)
-            ),
+            return_value=MagicMock(chat=AsyncMock(return_value=mock_result)),
         ):
             response = client.post(
                 "/api/v1/chat",
@@ -142,16 +140,20 @@ class TestAdminEndpoints:
 
     def test_get_stats(self, client: TestClient):
         """Test stats endpoint."""
-        with patch(
-            "src.api.routes.admin.get_db_session",
-        ), patch(
-            "src.db.repositories.document.DocumentRepository.get_document_count",
-            new_callable=AsyncMock,
-            return_value=10,
-        ), patch(
-            "src.db.repositories.document.DocumentRepository.get_chunk_count",
-            new_callable=AsyncMock,
-            return_value=100,
+        with (
+            patch(
+                "src.api.routes.admin.get_db_session",
+            ),
+            patch(
+                "src.db.repositories.document.DocumentRepository.get_document_count",
+                new_callable=AsyncMock,
+                return_value=10,
+            ),
+            patch(
+                "src.db.repositories.document.DocumentRepository.get_chunk_count",
+                new_callable=AsyncMock,
+                return_value=100,
+            ),
         ):
             # Stats endpoint might need database
             response = client.get("/api/v1/admin/stats")

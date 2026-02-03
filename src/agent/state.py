@@ -40,11 +40,13 @@ class AgentState:
 
     def add_source(self, title: str, url: str, snippet: str = "") -> None:
         """Add a source citation."""
-        self.sources.append({
-            "title": title,
-            "url": url,
-            "snippet": snippet,
-        })
+        self.sources.append(
+            {
+                "title": title,
+                "url": url,
+                "snippet": snippet,
+            }
+        )
 
     def format_context(self) -> str:
         """Format retrieved chunks as context string."""
@@ -57,9 +59,7 @@ class AgentState:
             url = chunk.get("url", "")
             content = chunk.get("content", "")
             context_parts.append(
-                f"[Source {i}] {title}\n"
-                f"URL: {url}\n"
-                f"Content: {content}\n"
+                f"[Source {i}] {title}\nURL: {url}\nContent: {content}\n"
             )
 
         return "\n---\n".join(context_parts)

@@ -100,9 +100,7 @@ async def get_stats(
     chunks = await doc_repo.get_chunk_count()
 
     # Get the most recent scrape date
-    result = await db.execute(
-        select(func.max(Document.last_scraped_at))
-    )
+    result = await db.execute(select(func.max(Document.last_scraped_at)))
     last_updated = result.scalar()
 
     return StatsResponse(

@@ -40,9 +40,7 @@ class TestSettings:
         assert "asyncpg" in settings.database_url
 
         # Should keep asyncpg if present
-        settings = Settings(
-            database_url="postgresql+asyncpg://user:pass@localhost/db"
-        )
+        settings = Settings(database_url="postgresql+asyncpg://user:pass@localhost/db")
         assert "asyncpg" in settings.database_url
         assert settings.database_url.count("asyncpg") == 1
 

@@ -50,13 +50,9 @@ class ChatResponse(BaseModel):
     """Response from the chat endpoint."""
 
     response: str = Field(..., description="Agent's response message")
-    sources: list[Source] = Field(
-        default_factory=list, description="Source citations"
-    )
+    sources: list[Source] = Field(default_factory=list, description="Source citations")
     session_id: str = Field(..., description="Session ID for conversation continuity")
-    language: str = Field(
-        default="en", description="Detected language (en or fr)"
-    )
+    language: str = Field(default="en", description="Detected language (en or fr)")
 
     model_config = {
         "json_schema_extra": {

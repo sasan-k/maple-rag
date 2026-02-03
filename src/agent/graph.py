@@ -52,12 +52,7 @@ def create_agent_graph() -> StateGraph:
         return "retrieve"
 
     graph.add_conditional_edges(
-        "guardrail",
-        route_guardrail,
-        {
-            "refusal": "refusal",
-            "retrieve": "retrieve"
-        }
+        "guardrail", route_guardrail, {"refusal": "refusal", "retrieve": "retrieve"}
     )
 
     graph.add_edge("retrieve", "generate")
@@ -151,9 +146,7 @@ class AgentExecutor:
             session_repo = SessionRepository(db)
 
             # Update session language
-            await session_repo.update_language(
-                current_session_id, language
-            )
+            await session_repo.update_language(current_session_id, language)
 
             # Save user message
             await session_repo.add_message(

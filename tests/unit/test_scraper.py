@@ -2,7 +2,6 @@
 Tests for web scraper.
 """
 
-
 from bs4 import BeautifulSoup
 
 from src.scraper.chunker import ContentChunker
@@ -33,11 +32,13 @@ class TestCanadaCrawler:
     def test_add_urls(self):
         """Test adding multiple URLs."""
         crawler = CanadaCrawler()
-        crawler.add_urls([
-            "https://example.com/1",
-            "https://example.com/2",
-            "https://example.com/3",
-        ])
+        crawler.add_urls(
+            [
+                "https://example.com/1",
+                "https://example.com/2",
+                "https://example.com/3",
+            ]
+        )
 
         assert len(crawler.base_urls) == 3
 

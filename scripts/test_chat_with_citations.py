@@ -31,6 +31,7 @@ async def test_database_connection():
     print("=" * 60)
 
     from src.config.settings import get_settings
+
     settings = get_settings()
 
     # Mask password in connection string for display
@@ -57,10 +58,14 @@ async def test_database_connection():
 
             # Check for pgvector extension
             result = await conn.execute(
-                text("SELECT EXISTS(SELECT 1 FROM pg_extension WHERE extname = 'vector')")
+                text(
+                    "SELECT EXISTS(SELECT 1 FROM pg_extension WHERE extname = 'vector')"
+                )
             )
             has_pgvector = result.scalar()
-            print(f"    pgvector extension: {'Installed' if has_pgvector else 'NOT INSTALLED'}")
+            print(
+                f"    pgvector extension: {'Installed' if has_pgvector else 'NOT INSTALLED'}"
+            )
 
         await engine.dispose()
         return True
@@ -68,7 +73,9 @@ async def test_database_connection():
     except Exception as e:
         print(f"[FAIL] Database connection failed: {e}")
         print("\n[TIP] Make sure your database is running and DATABASE_URL is correct.")
-        print("      For Neon: Sign up at https://neon.tech and get your connection string")
+        print(
+            "      For Neon: Sign up at https://neon.tech and get your connection string"
+        )
         return False
 
 
@@ -79,9 +86,12 @@ async def test_redis_connection():
     print("=" * 60)
 
     from src.config.settings import get_settings
+
     settings = get_settings()
 
-    print(f"\n[INFO] Redis URL: {settings.redis_url.split('@')[-1] if '@' in settings.redis_url else settings.redis_url}")
+    print(
+        f"\n[INFO] Redis URL: {settings.redis_url.split('@')[-1] if '@' in settings.redis_url else settings.redis_url}"
+    )
 
     try:
         import redis.asyncio as redis
@@ -93,7 +103,9 @@ async def test_redis_connection():
         # Test set/get
         await client.set("test_key", "canada.ca_chat_test")
         value = await client.get("test_key")
-        print(f"    Set/Get test: {'PASS' if value == 'canada.ca_chat_test' else 'FAIL'}")
+        print(
+            f"    Set/Get test: {'PASS' if value == 'canada.ca_chat_test' else 'FAIL'}"
+        )
         await client.delete("test_key")
 
         await client.close()
@@ -155,7 +167,7 @@ async def test_chat_with_citations():
 
     crawler = CanadaCrawler(
         base_urls=["https://www.canada.ca/en/services/taxes/income-tax.html"],
-        rate_limit=1.0
+        rate_limit=1.0,
     )
 
     pages = []
@@ -193,12 +205,16 @@ async def test_chat_with_citations():
     sources = []
 
     for i, chunk in enumerate(chunks[:3]):  # Use first 3 chunks
-        context_parts.append(f"[Source {i+1}]\nURL: {chunk.metadata.get('url', 'Unknown')}\nTitle: {chunk.metadata.get('title', 'Unknown')}\nContent: {chunk.content}")
-        sources.append({
-            "title": chunk.metadata.get("title", "Unknown"),
-            "url": chunk.metadata.get("url", "Unknown"),
-            "snippet": chunk.content[:150] + "..."
-        })
+        context_parts.append(
+            f"[Source {i + 1}]\nURL: {chunk.metadata.get('url', 'Unknown')}\nTitle: {chunk.metadata.get('title', 'Unknown')}\nContent: {chunk.content}"
+        )
+        sources.append(
+            {
+                "title": chunk.metadata.get("title", "Unknown"),
+                "url": chunk.metadata.get("url", "Unknown"),
+                "snippet": chunk.content[:150] + "...",
+            }
+        )
 
     context = "\n\n".join(context_parts)
 
@@ -310,7 +326,9 @@ async def main():
         status = "[OK]" if passed else "[FAIL]" if passed is False else "[SKIP]"
         print(f"  {test:20} {status}")
 
-    all_critical_passed = results.get("embeddings", False) and results.get("chat_citations", False)
+    all_critical_passed = results.get("embeddings", False) and results.get(
+        "chat_citations", False
+    )
 
     if all_critical_passed:
         print("\n[SUCCESS] Core RAG pipeline with citations is working!")

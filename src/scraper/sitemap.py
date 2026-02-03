@@ -113,7 +113,9 @@ class SitemapParser:
             # Format: 2026-01-27T11:05:03.823-05:00
             # Simplified parsing
             date_str = re.sub(r"\.\d+", "", date_str)  # Remove milliseconds
-            date_str = re.sub(r"([+-]\d{2}):(\d{2})$", r"\1\2", date_str)  # Fix timezone
+            date_str = re.sub(
+                r"([+-]\d{2}):(\d{2})$", r"\1\2", date_str
+            )  # Fix timezone
 
             for fmt in [
                 "%Y-%m-%dT%H:%M:%S%z",
@@ -290,9 +292,7 @@ class URLFilter:
             include_patterns: URL patterns to include (regex)
             exclude_patterns: URL patterns to exclude (regex)
         """
-        self.include_patterns = [
-            re.compile(p, re.I) for p in (include_patterns or [])
-        ]
+        self.include_patterns = [re.compile(p, re.I) for p in (include_patterns or [])]
         self.exclude_patterns = [
             re.compile(p, re.I)
             for p in (

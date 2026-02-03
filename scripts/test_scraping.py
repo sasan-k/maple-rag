@@ -44,7 +44,11 @@ async def test_scraping():
     async for page in crawler.crawl():
         pages.append(page)
         print(f"\n[OK] Scraped: {page.url}")
-        print(f"    Title: {page.title[:60]}..." if len(page.title) > 60 else f"    Title: {page.title}")
+        print(
+            f"    Title: {page.title[:60]}..."
+            if len(page.title) > 60
+            else f"    Title: {page.title}"
+        )
         print(f"    Language: {page.language}")
         print(f"    Content length: {len(page.content)} chars")
         print(f"    Word count: ~{page.word_count} words")
@@ -78,7 +82,11 @@ def test_chunking(pages):
             language=page.language,
         )
         all_chunks.extend(chunks)
-        print(f"\n[OK] Chunked '{page.title[:40]}...' " if len(page.title) > 40 else f"\n[OK] Chunked '{page.title}'")
+        print(
+            f"\n[OK] Chunked '{page.title[:40]}...' "
+            if len(page.title) > 40
+            else f"\n[OK] Chunked '{page.title}'"
+        )
         print(f"    Created {len(chunks)} chunks")
 
         # Show first chunk preview

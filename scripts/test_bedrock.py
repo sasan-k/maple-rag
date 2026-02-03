@@ -4,7 +4,7 @@ Test script to verify AWS Bedrock connectivity.
 
 Usage:
     uv run python scripts/test_bedrock.py
-    
+
 Requires AWS credentials to be configured via:
     - Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
     - .env file in project root
@@ -30,12 +30,15 @@ def test_aws_credentials():
 
     try:
         import boto3
+
         session = boto3.Session()
         credentials = session.get_credentials()
 
         if credentials is None:
             print("[FAIL] No AWS credentials found!")
-            print("   Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables")
+            print(
+                "   Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables"
+            )
             print("   Or run: aws configure")
             return False
 
@@ -114,7 +117,9 @@ def test_chat_completion():
         llm = LLMFactory.create_chat_model()
 
         # Simple test message
-        response = llm.invoke("Say 'Hello, Canada!' in both English and French. Keep it brief.")
+        response = llm.invoke(
+            "Say 'Hello, Canada!' in both English and French. Keep it brief."
+        )
 
         print("[OK] Chat completion successful!")
         print(f"\n   Response:\n   {response.content[:300]}")

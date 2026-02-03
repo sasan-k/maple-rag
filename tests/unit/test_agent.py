@@ -2,7 +2,6 @@
 Tests for agent components.
 """
 
-
 import pytest
 
 from src.agent.nodes.language import detect_language, detect_language_from_text
@@ -85,7 +84,9 @@ class TestLanguageDetection:
         """Test French detection."""
         assert detect_language_from_text("Comment puis-je déclarer mes impôts?") == "fr"
         assert detect_language_from_text("Quelles sont les dates limites?") == "fr"
-        assert detect_language_from_text("J'ai besoin d'aide avec ma déclaration") == "fr"
+        assert (
+            detect_language_from_text("J'ai besoin d'aide avec ma déclaration") == "fr"
+        )
 
     def test_detect_empty(self):
         """Test empty string defaults to English."""

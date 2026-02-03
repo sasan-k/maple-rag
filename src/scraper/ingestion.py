@@ -163,9 +163,7 @@ class IngestionPipeline:
 
                 await doc_repo.add_chunks_batch(document.id, chunk_data)
 
-                logger.info(
-                    f"Ingested {len(chunks)} chunks for: {page.url}"
-                )
+                logger.info(f"Ingested {len(chunks)} chunks for: {page.url}")
 
                 return IngestionResult(
                     url=page.url,

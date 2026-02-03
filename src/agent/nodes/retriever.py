@@ -68,20 +68,24 @@ async def retrieve(state: AgentState) -> AgentState:
                 continue
             seen_urls.add(url)
 
-            chunks.append({
-                "content": chunk.content,
-                "url": url,
-                "title": title,
-                "language": metadata.get("language", "en"),
-                "score": score,
-                "chunk_index": chunk.chunk_index,
-            })
+            chunks.append(
+                {
+                    "content": chunk.content,
+                    "url": url,
+                    "title": title,
+                    "language": metadata.get("language", "en"),
+                    "score": score,
+                    "chunk_index": chunk.chunk_index,
+                }
+            )
 
             # Add as source
             state.add_source(
                 title=title,
                 url=url,
-                snippet=chunk.content[:200] + "..." if len(chunk.content) > 200 else chunk.content,
+                snippet=chunk.content[:200] + "..."
+                if len(chunk.content) > 200
+                else chunk.content,
             )
 
         state.retrieved_chunks = chunks

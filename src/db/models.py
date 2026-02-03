@@ -61,9 +61,7 @@ class Document(Base):
         String(100), nullable=True
     )  # Track which embedding model was used
 
-    metadata_: Mapped[dict[str, Any]] = mapped_column(
-        "metadata", JSONB, default=dict
-    )
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
     )
@@ -105,17 +103,13 @@ class DocumentChunk(Base):
     content: Mapped[str] = mapped_column(Text, nullable=False)
     embedding = Column(Vector(1024))  # amazon.titan-embed-text-v2:0
     chunk_index: Mapped[int] = mapped_column(Integer, default=0)
-    metadata_: Mapped[dict[str, Any]] = mapped_column(
-        "metadata", JSONB, default=dict
-    )
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
     )
 
     # Relationships
-    document: Mapped["Document"] = relationship(
-        "Document", back_populates="chunks"
-    )
+    document: Mapped["Document"] = relationship("Document", back_populates="chunks")
 
     def __repr__(self) -> str:
         return f"<DocumentChunk(id={self.id}, doc={self.document_id}, idx={self.chunk_index})>"
@@ -133,9 +127,7 @@ class ChatSession(Base):
 
     id: Mapped[str] = mapped_column(String(255), primary_key=True)
     language: Mapped[str] = mapped_column(String(2), default="en")
-    metadata_: Mapped[dict[str, Any]] = mapped_column(
-        "metadata", JSONB, default=dict
-    )
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
     )

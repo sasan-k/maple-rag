@@ -30,9 +30,10 @@ async def scheduled_ingestion_job() -> None:
         proc1 = await asyncio.create_subprocess_exec(
             sys.executable,
             "scripts/incremental_ingest.py",
-            "--filter", "en/services/taxes/",
+            "--filter",
+            "en/services/taxes/",
             stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            stderr=asyncio.subprocess.PIPE,
         )
         stdout, stderr = await proc1.communicate()
         if proc1.returncode != 0:
@@ -45,9 +46,10 @@ async def scheduled_ingestion_job() -> None:
         proc2 = await asyncio.create_subprocess_exec(
             sys.executable,
             "scripts/incremental_ingest.py",
-            "--filter", "en/revenue-agency/services/tax/businesses/",
+            "--filter",
+            "en/revenue-agency/services/tax/businesses/",
             stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            stderr=asyncio.subprocess.PIPE,
         )
         stdout, stderr = await proc2.communicate()
         if proc2.returncode != 0:

@@ -139,4 +139,3 @@ Reply ONLY with "yes" or "no".
 GUARDRAIL_REFUSAL_EN = "I apologize, but I am specialized in Canadian taxes and government benefits. I cannot provide information on other topics. Please ask me a question related to taxes, credits, or the CRA."
 
 GUARDRAIL_REFUSAL_FR = "Je m'excuse, mais je suis spécialisé dans les impôts canadiens et les prestations gouvernementales. Je ne peux pas fournir d'informations sur d'autres sujets. Veuillez me poser une question relative aux impôts, aux crédits ou à l'ARC."
-

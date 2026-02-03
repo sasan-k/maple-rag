@@ -41,7 +41,7 @@ async def run_incremental_ingest(
 ):
     """
     Run incremental ingestion.
-    
+
     Args:
         filter_pattern: URL pattern to filter (e.g., "/en/services/taxes/")
         sitemap_url: URL of the sitemap to fetch
@@ -165,7 +165,11 @@ async def run_incremental_ingest(
                 existing_doc = await doc_repo.get_by_url(url)
                 new_hash = doc_repo.compute_hash(page.content)
 
-                if existing_doc and existing_doc.content_hash == new_hash and not full_reindex:
+                if (
+                    existing_doc
+                    and existing_doc.content_hash == new_hash
+                    and not full_reindex
+                ):
                     print("    [SKIP] Content unchanged (hash match)")
                     # Update sitemap_lastmod but skip re-embedding
                     existing_doc.sitemap_lastmod = entry.lastmod
@@ -227,6 +231,7 @@ async def run_incremental_ingest(
                     from sqlalchemy import update
 
                     from src.db.models import Document
+
                     await db.execute(
                         update(Document)
                         .where(Document.url == url)
@@ -262,40 +267,37 @@ def main():
         "--filter",
         type=str,
         default=None,
-        help="URL pattern to filter (e.g., '/en/revenue-agency/services/tax/')"
+        help="URL pattern to filter (e.g., '/en/revenue-agency/services/tax/')",
     )
     parser.add_argument(
         "--sitemap",
         type=str,
         default="https://www.canada.ca/en/revenue-agency.sitemap.xml",
-        help="Sitemap URL to fetch"
+        help="Sitemap URL to fetch",
     )
     parser.add_argument(
-        "--max-pages",
-        type=int,
-        default=None,
-        help="Maximum pages to process"
+        "--max-pages", type=int, default=None, help="Maximum pages to process"
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Show what would be done without making changes"
+        help="Show what would be done without making changes",
     )
     parser.add_argument(
-        "--full-reindex",
-        action="store_true",
-        help="Force reprocessing of all pages"
+        "--full-reindex", action="store_true", help="Force reprocessing of all pages"
     )
 
     args = parser.parse_args()
 
-    asyncio.run(run_incremental_ingest(
-        filter_pattern=args.filter,
-        sitemap_url=args.sitemap,
-        max_pages=args.max_pages,
-        dry_run=args.dry_run,
-        full_reindex=args.full_reindex,
-    ))
+    asyncio.run(
+        run_incremental_ingest(
+            filter_pattern=args.filter,
+            sitemap_url=args.sitemap,
+            max_pages=args.max_pages,
+            dry_run=args.dry_run,
+            full_reindex=args.full_reindex,
+        )
+    )
 
 
 if __name__ == "__main__":

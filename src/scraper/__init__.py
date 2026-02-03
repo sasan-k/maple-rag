@@ -14,4 +14,3 @@ __all__ = [
     "SitemapURL",
     "discover_urls_from_sitemap",
 ]
-

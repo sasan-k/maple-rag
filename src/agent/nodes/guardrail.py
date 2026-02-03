@@ -26,9 +26,7 @@ async def guardrail(state: AgentState) -> AgentState:
     # Use LLM to classify
     llm = LLMFactory.create_chat_model(temperature=0)
 
-    messages = [
-        HumanMessage(content=GUARDRAIL_PROMPT.format(message=query))
-    ]
+    messages = [HumanMessage(content=GUARDRAIL_PROMPT.format(message=query))]
 
     try:
         response = await llm.ainvoke(messages)

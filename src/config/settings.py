@@ -40,7 +40,9 @@ class Settings(BaseSettings):
     # ===================
     # LLM Provider Settings
     # ===================
-    llm_provider: Literal["azure_openai", "openai", "anthropic", "aws_bedrock"] = "aws_bedrock"
+    llm_provider: Literal["azure_openai", "openai", "anthropic", "aws_bedrock"] = (
+        "aws_bedrock"
+    )
 
     # Azure OpenAI
     azure_openai_endpoint: str | None = None
@@ -93,7 +95,9 @@ class Settings(BaseSettings):
     chunk_size: int = 1000
     chunk_overlap: int = 200
     retrieval_top_k: int = 5
-    embedding_dimensions: int = 1024  # amazon.titan-embed-text-v2:0 (use 3072 for OpenAI)
+    embedding_dimensions: int = (
+        1024  # amazon.titan-embed-text-v2:0 (use 3072 for OpenAI)
+    )
 
     # ===================
     # Scraper Settings

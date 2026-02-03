@@ -46,9 +46,7 @@ class AzureOpenAIProvider(BaseLLMProvider):
 
     def validate_config(self, settings: Settings) -> bool:
         """Check if Azure OpenAI is properly configured."""
-        return bool(
-            settings.azure_openai_endpoint and settings.azure_openai_api_key
-        )
+        return bool(settings.azure_openai_endpoint and settings.azure_openai_api_key)
 
     def create_chat_model(self, **kwargs: Any) -> BaseChatModel:
         """Create Azure OpenAI chat model."""
@@ -145,9 +143,7 @@ class AnthropicProvider(BaseLLMProvider):
         settings = get_settings()
 
         if not self.validate_config(settings):
-            raise LLMProviderError(
-                "Anthropic not configured. Set ANTHROPIC_API_KEY"
-            )
+            raise LLMProviderError("Anthropic not configured. Set ANTHROPIC_API_KEY")
 
         return ChatAnthropic(
             api_key=settings.anthropic_api_key,
@@ -180,7 +176,7 @@ class AnthropicProvider(BaseLLMProvider):
 class AWSBedrockProvider(BaseLLMProvider):
     """
     AWS Bedrock provider implementation.
-    
+
     Supports various models including:
     - Anthropic Claude (claude-3-5-sonnet, claude-3-opus, etc.)
     - Amazon Titan
@@ -202,6 +198,7 @@ class AWSBedrockProvider(BaseLLMProvider):
         # Otherwise, try to use boto3's default credential chain
         try:
             import boto3
+
             session = boto3.Session(region_name=settings.aws_region)
             credentials = session.get_credentials()
             return credentials is not None

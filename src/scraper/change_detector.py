@@ -46,7 +46,7 @@ class ChangeReport:
 class ChangeDetector:
     """
     Detects changes between sitemap and database.
-    
+
     Compares:
     - URLs in sitemap vs URLs in database
     - lastmod dates to detect content changes
@@ -55,7 +55,7 @@ class ChangeDetector:
     def __init__(self, session: AsyncSession):
         """
         Initialize the change detector.
-        
+
         Args:
             session: Database session
         """
@@ -64,7 +64,7 @@ class ChangeDetector:
     async def get_existing_documents(self) -> dict[str, Document]:
         """
         Get all existing documents from the database.
-        
+
         Returns:
             Dict mapping URL to Document
         """
@@ -81,11 +81,11 @@ class ChangeDetector:
     ) -> ChangeReport:
         """
         Detect changes between sitemap entries and database.
-        
+
         Args:
             sitemap_entries: List of SitemapURL from sitemap
             check_deleted: Whether to check for deleted URLs
-            
+
         Returns:
             ChangeReport with categorized URLs
         """
@@ -96,7 +96,9 @@ class ChangeDetector:
         existing_urls = set(existing_docs.keys())
         sitemap_urls = {entry.url for entry in sitemap_entries}
 
-        logger.info(f"Comparing {len(sitemap_entries)} sitemap URLs with {len(existing_docs)} database documents")
+        logger.info(
+            f"Comparing {len(sitemap_entries)} sitemap URLs with {len(existing_docs)} database documents"
+        )
 
         for entry in sitemap_entries:
             url = entry.url
@@ -112,7 +114,9 @@ class ChangeDetector:
                 if entry.lastmod and doc.sitemap_lastmod:
                     if entry.lastmod > doc.sitemap_lastmod:
                         report.changed_urls.append(entry)
-                        logger.debug(f"CHANGED: {url} (sitemap: {entry.lastmod}, db: {doc.sitemap_lastmod})")
+                        logger.debug(
+                            f"CHANGED: {url} (sitemap: {entry.lastmod}, db: {doc.sitemap_lastmod})"
+                        )
                     else:
                         report.unchanged_urls.append(entry)
                 elif entry.lastmod and not doc.sitemap_lastmod:
@@ -140,11 +144,11 @@ class ChangeDetector:
     ) -> int:
         """
         Mark URLs for processing in the database.
-        
+
         Args:
             urls: List of SitemapURL to mark
             status: Status to set ('pending', 'changed')
-            
+
         Returns:
             Number of URLs marked
         """
@@ -168,11 +172,11 @@ class ChangeDetector:
     async def mark_deleted(self, urls: list[str], soft_delete: bool = True) -> int:
         """
         Mark URLs as deleted.
-        
+
         Args:
             urls: List of URLs to mark as deleted
             soft_delete: If True, mark as 'deleted'. If False, actually delete.
-            
+
         Returns:
             Number of URLs processed
         """
@@ -211,10 +215,10 @@ async def detect_changes_for_sitemap(
 ) -> ChangeReport:
     """
     Convenience function to detect changes for a list of sitemap entries.
-    
+
     Args:
         sitemap_entries: List of SitemapURL from sitemap
-        
+
     Returns:
         ChangeReport with categorized URLs
     """
