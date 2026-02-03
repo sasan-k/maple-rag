@@ -77,3 +77,10 @@ Thumbs.db
 data/
 scraped_content/
 *.db
+
+# Test output files
+*_output.txt
+*_response.json
+chat_*.json
+test_*.json
+ingest_output.txt

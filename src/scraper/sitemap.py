@@ -31,6 +31,11 @@ class SitemapURL:
     priority: float | None = None
 
     @property
+    def url(self) -> str:
+        """Alias for loc for compatibility."""
+        return self.loc
+
+    @property
     def language(self) -> str:
         """Detect language from URL path."""
         if "/fr/" in self.loc or ".fr." in self.loc:
