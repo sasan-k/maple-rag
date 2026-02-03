@@ -143,9 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${role}`;
 
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
-        avatar.textContent = role === 'user' ? '👤' : '🤖';
+        const label = document.createElement('div');
+        label.className = 'message-label';
+
+        // Set text based on role and language
+        if (role === 'user') {
+            label.textContent = currentLanguage === 'fr' ? 'Vous' : 'You';
+        } else {
+            label.textContent = currentLanguage === 'fr' ? 'Assistant' : 'Assistant';
+        }
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
@@ -168,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contentDiv.appendChild(sourcesDiv);
         }
 
-        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(label);
         messageDiv.appendChild(contentDiv);
         messagesContainer.appendChild(messageDiv);
     }
