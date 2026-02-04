@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  ACR_NAME: myregistry          # Replace/Set this
-  RESOURCE_GROUP: my-rg         
+  ACR_NAME: canadacaregistry
+  RESOURCE_GROUP: canadaca-rg         
   WEB_APP_NAME: canadaca-web
   JOB_NAME: canadaca-scraper
 
