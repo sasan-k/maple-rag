@@ -9,6 +9,7 @@ on:
 env:
   ACR_NAME: canadacaregistry
   RESOURCE_GROUP: canadaca-rg         
+  LOCATION: canadacentral
   WEB_APP_NAME: canadaca-web
   JOB_NAME: canadaca-scraper
 
@@ -64,13 +65,13 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Deploy Web App
       - name: Update Web App Image
         uses: azure/container-apps-deploy-action@v1
         with:
           acrName: ${{ env.ACR_NAME }}
           containerAppName: ${{ env.WEB_APP_NAME }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
+          location: ${{ env.LOCATION }}
           imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }}
 
       # Deploy Scraper Job
