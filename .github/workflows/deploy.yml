@@ -82,6 +82,8 @@ jobs:
           containerAppName: ${{ env.WEB_APP_NAME }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           location: ${{ env.LOCATION }}
+          targetPort: 8000
+          ingress: external
           imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }}
           envVars: |
             DATABASE_URL=${{ secrets.DATABASE_URL }}
