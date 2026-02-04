@@ -97,13 +97,20 @@ jobs:
       # Deploy Scraper Job
       - name: Update Scraper Job Image
         run: |
+          # Get the environment ID from the web app we just deployed
+          ACA_ENV_ID=$(az containerapp show --name ${{ env.WEB_APP_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --query properties.environmentId --output tsv)
+          
           # Check if job exists
           if ! az containerapp job show --name ${{ env.JOB_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} > /dev/null 2>&1; then
             echo "Job does not exist. Creating..."
             az containerapp job create \
               --name ${{ env.JOB_NAME }} \
               --resource-group ${{ env.RESOURCE_GROUP }} \
+              --environment "$ACA_ENV_ID" \
               --image ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }} \
+              --registry-server ${{ env.ACR_NAME }}.azurecr.io \
+              --registry-username ${{ steps.acr-creds.outputs.username }} \
+              --registry-password ${{ steps.acr-creds.outputs.password }} \
               --trigger-type "Manual" \
               --replica-timeout 1800 \
               --replica-retry-limit 3 \
