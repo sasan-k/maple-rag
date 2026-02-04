@@ -97,7 +97,22 @@ jobs:
       # Deploy Scraper Job
       - name: Update Scraper Job Image
         run: |
-          az containerapp job update \
-            --name ${{ env.JOB_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --image ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }}
+          # Check if job exists
+          if ! az containerapp job show --name ${{ env.JOB_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} > /dev/null 2>&1; then
+            echo "Job does not exist. Creating..."
+            az containerapp job create \
+              --name ${{ env.JOB_NAME }} \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --image ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }} \
+              --trigger-type "Manual" \
+              --replica-timeout 1800 \
+              --replica-retry-limit 3 \
+              --env-vars "DATABASE_URL=${{ secrets.DATABASE_URL }}" "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" "AWS_REGION=ca-central-1" "ENVIRONMENT=production" \
+              --cpu "0.5" --memory "1.0Gi"
+          else
+            echo "Job exists. Updating..."
+            az containerapp job update \
+              --name ${{ env.JOB_NAME }} \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --image ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }}
+          fi
