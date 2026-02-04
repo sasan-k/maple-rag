@@ -21,6 +21,7 @@ jobs:
   # Job 1: Build and Push (Runs automatically)
   build:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
