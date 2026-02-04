@@ -65,10 +65,20 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      # Get ACR Credentials
+      - name: Get ACR Credentials
+        id: acr-creds
+        run: |
+          echo "username=$(az acr credential show --name ${{ env.ACR_NAME }} --query username --output tsv)" >> $GITHUB_OUTPUT
+          echo "password=$(az acr credential show --name ${{ env.ACR_NAME }} --query passwords[0].value --output tsv)" >> $GITHUB_OUTPUT
+
+      # Deploy Web App
       - name: Update Web App Image
         uses: azure/container-apps-deploy-action@v1
         with:
           acrName: ${{ env.ACR_NAME }}
+          acrUsername: ${{ steps.acr-creds.outputs.username }}
+          acrPassword: ${{ steps.acr-creds.outputs.password }}
           containerAppName: ${{ env.WEB_APP_NAME }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           location: ${{ env.LOCATION }}
