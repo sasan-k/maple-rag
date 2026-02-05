@@ -85,7 +85,7 @@ jobs:
           targetPort: 8000
           ingress: external
           imageToDeploy: ${{ env.ACR_NAME }}.azurecr.io/canadaca-chat:${{ github.sha }}
-          envVars: |
+          environmentVariables: |
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
