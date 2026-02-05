@@ -28,6 +28,18 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     settings = get_settings()
     logger.info(f"Environment: {settings.environment}")
 
+    # Debug: Print masked variables to verify presence
+    import os
+    keys_to_check = ["DATABASE_URL", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "OPENAI_API_KEY", "AZURE_OPENAI_API_KEY"]
+    for key in keys_to_check:
+        val = os.getenv(key)
+        if val:
+            masked = val[:5] + "***" + val[-4:] if len(val) > 10 else "***"
+            logger.info(f"{key}: {masked} (Length: {len(val)})")
+        else:
+            logger.warning(f"{key}: NOT SET")
+
+
     # Initialize database
     try:
         await init_db()
